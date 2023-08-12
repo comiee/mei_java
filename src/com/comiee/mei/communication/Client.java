@@ -55,6 +55,7 @@ public class Client {
             }
         } catch (IOException e){
             logger.severe("监听客户端时出现异常："+e.toString());
+            e.printStackTrace();
         }
     }
 

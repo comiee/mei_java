@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
         Client client = new DemoClient();
-        //new Thread(client::listenServer).start();
+        new Thread(client::listenServer).start();
         String s;
         Scanner scan = new Scanner(System.in);
         do {

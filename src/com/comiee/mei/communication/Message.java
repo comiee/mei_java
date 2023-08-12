@@ -3,6 +3,8 @@ package com.comiee.mei.communication;
 import com.comiee.mei.communal.Json;
 import com.comiee.mei.communal.Receiver;
 
+import java.util.Map;
+
 
 /**
  * 消息类
@@ -13,8 +15,9 @@ import com.comiee.mei.communal.Receiver;
  * @param <R> 响应消息的value类型
  */
 public abstract class Message<T, R> {
-    private String cmd; // 消息命令字
+    private static Map<String,Message> messageMap;
 
+    private String cmd; // 消息命令字
     private Receiver<T, R> receiver;
 
     protected Message(String cmd) {
@@ -34,9 +37,11 @@ public abstract class Message<T, R> {
         ).toString();
     }
 
+
     /* 注册接收消息时的处理函数 */
     public void on_receive(Receiver<T, R> receiver) {
         this.receiver = receiver;
+        messageMap.put(cmd,this);
     }
 
     static <R> R parse(String message) {

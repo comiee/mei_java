@@ -1,7 +1,6 @@
 package com.comiee.mei.communication;
 
 import com.comiee.mei.communal.Json;
-import com.comiee.mei.communal.Receiver;
 import com.comiee.mei.communal.exception.MessageException;
 
 import java.util.HashMap;
@@ -13,11 +12,10 @@ import java.util.Map;
  * 发送{"cmd":cmd, "value":value}
  * 接收{"cmd":"result", "value":value}
  */
-public abstract class Message {
+public class Message { // TODO 换成单例
     private static final Map<String, Message> messageMap = new HashMap<>();
 
     private final String cmd; // 消息命令字
-    private Receiver receiver;
 
     protected Message(String cmd) {
         this.cmd = cmd;
@@ -38,13 +36,12 @@ public abstract class Message {
 
 
     /* 注册接收消息时的处理函数 */
-    public void on_receive(Receiver receiver) {
-        this.receiver = receiver;
+    public void register() {
         messageMap.put(cmd, this);
     }
 
-    private Object solve(Object value) {
-        return receiver.receive(value);
+    public Object receive(Object value) {
+        return null;
     }
 
     static Object parse(String message) throws MessageException {
@@ -56,7 +53,7 @@ public abstract class Message {
 
         for (String s : messageMap.keySet()) {
             if (s.equals(cmd)) {
-                return messageMap.get(s).solve(value);
+                return messageMap.get(s).receive(value);
             }
         }
         throw new MessageException("解析消息出错，未注册的命令：" + message);

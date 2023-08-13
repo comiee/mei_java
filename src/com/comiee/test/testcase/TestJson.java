@@ -16,7 +16,7 @@ public class TestJson extends TestCase {
                         "float", 8.9,
                         "boolean", true,
                         "null", Json.Null,
-                        "string", "{}"
+                        "string", "{,}"
                 )
         );
         assertEqual("{\"cmd\":\"test\",\"value\":{" +
@@ -25,7 +25,7 @@ public class TestJson extends TestCase {
                         "\"float\":8.9," +
                         "\"boolean\":true," +
                         "\"null\":null," +
-                        "\"string\":\"{}\"}}",
+                        "\"string\":\"{,}\"}}",
                 json.dump());
     }
 
@@ -39,7 +39,7 @@ public class TestJson extends TestCase {
                         "float", 8.9,
                         "boolean", true,
                         "null", Json.Null,
-                        "string", "{}"
+                        "string", "{,}"
                 )
         );
         assertEqual(json, Json.parse("{\"cmd\":\"test\",\"value\":{" +
@@ -48,7 +48,7 @@ public class TestJson extends TestCase {
                 "\"float\":8.9," +
                 "\"boolean\":true," +
                 "\"null\":null," +
-                "\"string\":\"{}\"}}"));
+                "\"string\":\"{,}\"}}"));
     }
 
     public static void main(String[] args) throws Exception {

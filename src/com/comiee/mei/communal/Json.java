@@ -1,6 +1,7 @@
 package com.comiee.mei.communal;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -54,21 +55,17 @@ public class Json extends LinkedHashMap<String, Object> {
         return s.toString();
     }
 
-    private static String dumpNull() {
-        return "null";
-    }
-
     private static String dumpObject(Object value) throws Exception {
-        return switch(value){
-            case Integer i->dumpInt(i);
-            case Double d->dumpFloat(d);
-            case String s->dumpString(s);
-            case Boolean b->dumpBool(b);
-            case List<?> l->dumpList(l);
-            case Json j->dumpJson(j);
+        return switch (value) {
+            case Integer i -> dumpInt(i);
+            case Double d -> dumpFloat(d);
+            case String s -> dumpString(s);
+            case Boolean b -> dumpBool(b);
+            case List<?> l -> dumpList(l);
+            case Json j -> dumpJson(j);
             default -> {
-                if(value==Null){
-                    yield dumpNull();
+                if (value == Null) {
+                    yield "null";
                 }
                 throw new Exception("构建Json字符串失败，无法解析的对象：" + value);
             }
@@ -89,11 +86,36 @@ public class Json extends LinkedHashMap<String, Object> {
         }
     }
 
+    private static void Throw(String text) throws Exception {
+        throw new Exception(text);
+    }
+
     private static void Assert(boolean flag, String text) throws Exception {
         if (!flag) {
-            throw new Exception(text);
+            Throw(text);
         }
     }
+
+    private static int halfIndex(String string, char c) throws Exception {
+        char target = switch (c) {
+            case '{' -> '}';
+            case '[' -> ']';
+            case '"' -> '"';
+            default -> throw new Exception("非成对字符");
+        };
+        int n = 1;
+        for (int i = 0; i < string.length(); i++) {
+            if (string.charAt(i) == c) {
+                n++;
+            } else if (string.charAt(i) == target) {
+                n--;
+            }
+            if (n == 0) {
+                return i;
+            }
+        }
+        return string.length();
+    } // TODO [}  ["]"]  [{]} "\""
 
     private static Json parseJson(String string) throws Exception {
         String text = "解析Json字符串失败，Json：" + string;
@@ -105,16 +127,23 @@ public class Json extends LinkedHashMap<String, Object> {
             Assert(keyStart < keyEnd && keyStart != -1, text);
             String key = string.substring(keyStart + 1, keyEnd);
             Assert(string.charAt(keyEnd + 1) == ':', text);
-            int valueStart = keyEnd + 1;
-            int valueEnd = string.indexOf(',', valueStart);
-            if (valueEnd == -1) {
-                valueEnd = string.length() - 1;
-            }
+            int valueStart = keyEnd + 2;
+            int valueEnd = getValueEnd(string, valueStart);
             Object value = parseValue(string.substring(valueStart, valueEnd));
             result.put(key, value);
             string = string.substring(valueEnd + 1);
         }
         return result;
+    }
+
+
+    private static List<Object> parseList(String string) throws Exception {
+        String text = "解析Json字符串失败，List：" + string;
+        Assert(string.charAt(0) == '[' && string.charAt(string.length() - 1) == '}', text);
+        List<Object> result = new LinkedList<>();
+        while (!string.isEmpty()) {
+
+        }
     }
 
     private static Object parseValue(String string) throws Exception {
@@ -131,7 +160,7 @@ public class Json extends LinkedHashMap<String, Object> {
                     return parseJson(string.substring(i + 1));
                 }
             }
-            Assert(true, text);
+            Throw(text);
         } else if (string.charAt(0) == '[') {
             int n = 1;
             for (int i = 1; i < string.length(); i++) {
@@ -141,17 +170,32 @@ public class Json extends LinkedHashMap<String, Object> {
                     default -> 0;
                 };
                 if (n == 0) {
-                    //return parseList(string.substring(i + 1));
+                    return parseList(string.substring(i + 1));
                 }
             }
-            Assert(true, text);
+            Throw(text);
         } else if (string.charAt(0) == '"') {
             for (int i = 1; i < string.length(); i++) {
                 if (string.charAt(i) == '"' && string.charAt(i - 1) != '\\') {
-                    //return parseString(string.substring(i + 1));
+                    return parseString(string.substring(i + 1));
                 }
             }
-            Assert(true, text);
+            Throw(text);
+        } else if (string.equals("true")) {
+            return true;
+        } else if (string.startsWith("false")) {
+            return false;
+        } else if (string.startsWith("null")) {
+            return Null;
+        }
+        try {
+            if (string.contains(".")) {
+                return Double.valueOf(string);
+            } else {
+                return Integer.valueOf(string);
+            }
+        } catch (NumberFormatException e) {
+            Throw(text);
         }
         return null;
     }

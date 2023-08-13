@@ -1,17 +1,19 @@
 package com.comiee.mei.communication;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
 import java.util.logging.Logger;
 
 import static com.comiee.mei.communication.Comm.*;
 
 public class Client {
-    private String name;
+    private final String name;
     private Socket sender;
     private Socket receiver;
 
-    private Logger logger = Logger.getLogger("client");
+    private final Logger logger = Logger.getLogger("client");
 
     public Client(String name) {
         this.name = name;
@@ -53,9 +55,10 @@ public class Client {
                 logger.fine("客户端[" + name + "]向服务器回响应：" + result);
                 sendMsg(receiver, result);
             }
-        } catch (IOException e){
-            logger.severe("监听客户端时出现异常："+e.toString());
-            e.printStackTrace();
+        } catch (IOException e) {
+            StringWriter stringWriter = new StringWriter();
+            e.printStackTrace(new PrintWriter(stringWriter));
+            logger.severe("监听客户端时出现异常：" + e + "\n" + stringWriter);
         }
     }
 

@@ -1,7 +1,7 @@
-package com.comiee.test;
+package com.comiee.test.comm;
 
-class TestCase {
-    void assertEqual(Object a, Object b) {
+public class TestCase {
+    protected void assertEqual(Object a, Object b) {
         if (!a.equals(b)) {
             throw new AssertionError("预期：" + a + "实际：" + b);
         } else {

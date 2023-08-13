@@ -17,7 +17,7 @@ import java.util.Map;
 public abstract class Message<T, R> {
     private static Map<String,Message> messageMap;
 
-    private String cmd; // 消息命令字
+    private final String cmd; // 消息命令字
     private Receiver<T, R> receiver;
 
     protected Message(String cmd) {

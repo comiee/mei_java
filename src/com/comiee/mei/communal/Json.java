@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class Json extends LinkedHashMap<String, Object> {
-    public static Object Null = new Object();
+    public static final Object Null = new Object();
 
     private static String dumpInt(Integer value) {
         return value.toString();
@@ -99,7 +99,7 @@ public class Json extends LinkedHashMap<String, Object> {
         String text = "解析Json字符串失败，Json：" + string;
         Assert(string.charAt(0) == '{' && string.charAt(string.length() - 1) == '}', text);
         Json result = new Json();
-        while (string.length() > 0) {
+        while (!string.isEmpty()) {
             int keyStart = string.indexOf('"');
             int keyEnd = string.indexOf('"', keyStart + 1);
             Assert(keyStart < keyEnd && keyStart != -1, text);
@@ -194,10 +194,9 @@ public class Json extends LinkedHashMap<String, Object> {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Json)) {
+        if (!(obj instanceof Json other)) {
             return false;
         }
-        Json other = (Json) obj;
         if (!this.keySet().equals(other.keySet())) {
             return false;
         }

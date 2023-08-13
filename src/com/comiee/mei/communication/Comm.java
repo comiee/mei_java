@@ -5,9 +5,9 @@ import java.net.Socket;
 
 
 class Comm {
-    static String HOST = "127.0.0.1";
-    static int PORT = 9999;
-    private static String ENCODING = "UTF-8";
+    static final String HOST = "127.0.0.1";
+    static final int PORT = 9999;
+    private static final String ENCODING = "UTF-8";
 
     public static int RECONNECT_TIME = 3; // 连接失败后的重连等待时间
 

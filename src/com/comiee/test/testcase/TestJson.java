@@ -1,6 +1,7 @@
-package com.comiee.test;
+package com.comiee.test.testcase;
 
 import com.comiee.mei.communal.Json;
+import com.comiee.test.comm.TestCase;
 
 import java.util.List;
 

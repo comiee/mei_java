@@ -15,7 +15,7 @@ public class Main {
             s = scan.nextLine();
             String ret = client.send(new DebugMsg().build(s));
             System.out.println(ret);
-        } while (!s.equals(""));
+        } while (!s.isEmpty());
         client.close();
     }
 }

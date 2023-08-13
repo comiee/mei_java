@@ -1,8 +1,8 @@
 package com.comiee.mei.communication;
 
+import com.comiee.mei.communal.exception.MessageException;
+
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.Socket;
 import java.util.logging.Logger;
 
@@ -33,41 +33,64 @@ public class Client {
         return socket;
     }
 
-    public <R> R send(String message) throws IOException {
-        if (sender == null) {
-            sender = register("sender");
+    public Object send(String message) {
+        try {
+            if (sender == null) {
+                sender = register("sender");
+            }
+            sendMsg(sender, message);
+            logger.fine("客户端[" + name + "]发送消息到服务器：" + message);
+            String result = recvMsg(sender);
+            logger.fine("客户端[" + name + "]收到服务器回响应：" + result);
+            try {
+                return ResultMsg.parseResult(result);
+            } catch (MessageException e) {
+                logger.severe("客户端[" + name + "]解析服务器响应消息失败：" + e);
+            }
+            return null;
+        } catch (IOException e) {
+            logger.warning("客户端[" + name + "]连接服务器失败：" + e + "，将在" + RECONNECT_TIME + "秒后重试");
+            sleep(RECONNECT_TIME);
+            return send(message);
         }
-        // TODO 重试机制
-        sendMsg(sender, message);
-        logger.fine("客户端[" + name + "]发送消息到服务器：" + message);
-        String result = recvMsg(sender);
-        logger.fine("客户端[" + name + "]收到服务器回响应：" + result);
-        return Message.parse(result);
     }
 
-    public <T, R> void listenServer() {
+    public void listenServer() {
         try {
             receiver = register("receiver");
             while (receiver.isConnected()) {
                 String message = recvMsg(receiver);
                 logger.fine("客户端[" + name + "]收到服务器消息：" + message);
-                String result = new ResultMsg<T, R>().build(Message.parse(message));
+                Object value;
+                try {
+                    value = Message.parse(message);
+                } catch (MessageException e) {
+                    logger.severe("客户端[" + name + "]解析服务器消息失败：" + e);
+                    continue;
+                }
+                String result = new ResultMsg().build(value);
                 logger.fine("客户端[" + name + "]向服务器回响应：" + result);
                 sendMsg(receiver, result);
             }
         } catch (IOException e) {
-            StringWriter stringWriter = new StringWriter();
-            e.printStackTrace(new PrintWriter(stringWriter));
-            logger.severe("监听客户端时出现异常：" + e + "\n" + stringWriter);
+            logger.severe("客户端[" + name + "监听客户端时出现异常：" + e + "，将在" + RECONNECT_TIME + "秒后重试");
+            sleep(RECONNECT_TIME);
+            listenServer();
         }
     }
 
-    public void close() throws IOException {
+    public void close() {
         if (sender != null) {
-            sender.close();
+            try {
+                sender.close();
+            } catch (IOException ignored) {
+            }
         }
         if (receiver != null) {
-            receiver.close();
+            try {
+                receiver.close();
+            } catch (IOException ignored) {
+            }
         }
     }
 }

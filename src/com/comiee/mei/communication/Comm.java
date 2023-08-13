@@ -9,7 +9,7 @@ class Comm {
     static final int PORT = 9999;
     private static final String ENCODING = "UTF-8";
 
-    public static int RECONNECT_TIME = 3; // 连接失败后的重连等待时间
+    public static final int RECONNECT_TIME = 3; // 连接失败后的重连等待时间
 
     static void sendMsg(Socket socket, String string) throws IOException {
         var output = socket.getOutputStream();
@@ -22,5 +22,12 @@ class Comm {
         var input = socket.getInputStream();
         int length = Integer.parseInt(new String(input.readNBytes(5), ENCODING));
         return new String(input.readNBytes(length), ENCODING);
+    }
+
+    static void sleep(long seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException ignored) {
+        }
     }
 }

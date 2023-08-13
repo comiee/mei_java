@@ -23,7 +23,7 @@ public class Json extends LinkedHashMap<String, Object> {
         return value.toString();
     }
 
-    private static String dumpList(List value) {
+    private static String dumpList(List<?> value) {
         StringBuilder s = new StringBuilder();
         s.append("[");
         for (Object obj : value) {
@@ -59,23 +59,20 @@ public class Json extends LinkedHashMap<String, Object> {
     }
 
     private static String dumpObject(Object value) throws Exception {
-        if (value instanceof Integer) {
-            return dumpInt((Integer) value);
-        } else if (value instanceof Double) {
-            return dumpFloat((Double) value);
-        } else if (value instanceof String) {
-            return dumpString((String) value);
-        } else if (value instanceof Boolean) {
-            return dumpBool((Boolean) value);
-        } else if (value instanceof List) {
-            return dumpList((List) value);
-        } else if (value instanceof Json) {
-            return dumpJson((Json) value);
-        } else if (value == Null) {
-            return dumpNull();
-        } else {
-            throw new Exception("构建Json字符串失败，无法解析的对象：" + value);
-        }
+        return switch(value){
+            case Integer i->dumpInt(i);
+            case Double d->dumpFloat(d);
+            case String s->dumpString(s);
+            case Boolean b->dumpBool(b);
+            case List<?> l->dumpList(l);
+            case Json j->dumpJson(j);
+            default -> {
+                if(value==Null){
+                    yield dumpNull();
+                }
+                throw new Exception("构建Json字符串失败，无法解析的对象：" + value);
+            }
+        };
     }
 
     public String dump() throws Exception {
@@ -144,14 +141,14 @@ public class Json extends LinkedHashMap<String, Object> {
                     default -> 0;
                 };
                 if (n == 0) {
-                    return parseList(string.substring(i + 1));
+                    //return parseList(string.substring(i + 1));
                 }
             }
             Assert(true, text);
         } else if (string.charAt(0) == '"') {
             for (int i = 1; i < string.length(); i++) {
                 if (string.charAt(i) == '"' && string.charAt(i - 1) != '\\') {
-                    return parseString(string.substring(i + 1));
+                    //return parseString(string.substring(i + 1));
                 }
             }
             Assert(true, text);

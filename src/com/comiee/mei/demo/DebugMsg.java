@@ -1,9 +1,7 @@
 package com.comiee.mei.demo;
 
-import com.comiee.mei.communal.MessageDefine;
 import com.comiee.mei.communication.Message;
 
-@MessageDefine
 public class DebugMsg extends Message {
     DebugMsg() {
         super("debug");

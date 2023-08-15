@@ -1,7 +1,6 @@
 package com.comiee.mei.initialization;
 
 
-import com.comiee.mei.communal.MessageDefine;
 import com.comiee.mei.communal.exception.LoadException;
 import com.comiee.mei.communication.Message;
 
@@ -29,16 +28,11 @@ public class Load {
     }
 
     public static void initMessage(String pack) throws LoadException {
-
         // 获取包名下所有类
         Set<Class<?>> classes = getClasses(pack);
         for (var c : classes) {
-            if (!c.equals(Message.class) && Message.class.isAssignableFrom(c)) {
-                if (c.isAnnotationPresent(MessageDefine.class)) {
-                    loadMessage(c);
-                } else if (hasMethod(c, "receive")) {
-                    throw new LoadException(c.getName() + "类重写了receive方法但是没有加MessageDefine注解");
-                }
+            if (!c.equals(Message.class) && Message.class.isAssignableFrom(c) && hasMethod(c, "receive")) {
+                loadMessage(c);
             }
         }
     }

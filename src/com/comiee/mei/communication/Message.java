@@ -12,7 +12,7 @@ import java.util.Map;
  * 发送{"cmd":cmd, "value":value}
  * 接收{"cmd":"result", "value":value}
  */
-public class Message { // TODO 换成单例
+public class Message {
     private static final Map<String, Message> messageMap = new HashMap<>();
 
     private final String cmd; // 消息命令字
@@ -36,7 +36,8 @@ public class Message { // TODO 换成单例
 
 
     /* 注册接收消息时的处理函数 */
-    public void register() {
+    @SuppressWarnings("unused")
+    private void register() { // 此函数通过反射调用
         messageMap.put(cmd, this);
     }
 

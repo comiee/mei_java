@@ -1,12 +1,10 @@
 package com.comiee.mei.demo;
 
+import com.comiee.mei.communal.MessageDefine;
 import com.comiee.mei.communication.Message;
 
+@MessageDefine
 public class DebugMsg extends Message {
-    static { // TODO 这种注册方式有点麻烦，尝试使用反射注册
-        new DebugMsg().register();
-    }
-
     DebugMsg() {
         super("debug");
     }

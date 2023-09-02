@@ -1,6 +1,7 @@
 package com.comiee.mei.demo;
 
 import com.comiee.mei.communication.Message;
+import com.google.gson.JsonElement;
 
 public class DebugMsg extends Message {
     DebugMsg() {
@@ -12,7 +13,7 @@ public class DebugMsg extends Message {
     }
 
     @Override
-    public Object receive(Object value) {
+    public Object receive(JsonElement value) {
         System.out.println("调测信息：" + value);
         return value;
     }

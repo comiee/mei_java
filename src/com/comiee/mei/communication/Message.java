@@ -1,7 +1,9 @@
 package com.comiee.mei.communication;
 
-import com.comiee.mei.communal.Json;
+import com.comiee.mei.communal.JsonTool;
 import com.comiee.mei.communal.exception.MessageException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class Message {
      * @return json格式的字符串
      */
     protected String buildMsg(Object value) {
-        return Json.of(
+        return JsonTool.createJsonObject(
                 "cmd", cmd,
                 "value", value
         ).toString();
@@ -41,16 +43,20 @@ public class Message {
         messageMap.put(cmd, this);
     }
 
-    public Object receive(Object value) {
+    public Object receive(JsonElement value) {
         return null;
     }
 
     static Object parse(String message) throws MessageException {
-        Json json = Json.parse(message);
-        if (!(json.get("cmd") instanceof String cmd)) {
+        JsonObject jsonObject = JsonTool.parse(message);
+        String cmd = JsonTool.getFromObject(jsonObject, "cmd", String.class);
+        if (cmd == null) {
             throw new MessageException("解析消息出错，不存在cmd字段或cmd不是String：" + message);
         }
-        Object value = json.get("value");
+        JsonElement value = JsonTool.getFromObject(jsonObject, "value", JsonElement.class);
+        if (value == null) {
+            throw new MessageException("解析消息出错，不存在value字段" + message);
+        }
 
         for (String s : messageMap.keySet()) {
             if (s.equals(cmd)) {
@@ -67,7 +73,7 @@ class RegisterMsg extends Message {
     }
 
     String build(String name, String type) {
-        return super.buildMsg(Json.of(
+        return super.buildMsg(JsonTool.createJsonObject(
                 "name", name,
                 "client_type", type
         ));
@@ -83,14 +89,19 @@ class ResultMsg extends Message {
         return super.buildMsg(value);
     }
 
-    static Object parseResult(String message) throws MessageException {
-        Json json = Json.parse(message);
-        if (!(json.get("cmd") instanceof String cmd)) {
-            throw new MessageException("解析响应消息出错，不存在cmd字段或cmd不是String：" + message);
+    static JsonElement parseResult(String message) throws MessageException {
+        JsonObject jsonObject = JsonTool.parse(message);
+        String cmd = JsonTool.getFromObject(jsonObject, "cmd", String.class);
+        if (cmd == null) {
+            throw new MessageException("解析消息出错，不存在cmd字段或cmd不是String：" + message);
         }
         if (!cmd.equals("result")) {
             throw new MessageException("解析响应消息出错，cmd不是result：" + message);
         }
-        return json.get("value");
+        JsonElement value = JsonTool.getFromObject(jsonObject, "value", JsonElement.class);
+        if (value == null) {
+            throw new MessageException("解析消息出错，不存在value字段" + message);
+        }
+        return value;
     }
 }

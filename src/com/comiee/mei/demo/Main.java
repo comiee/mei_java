@@ -2,6 +2,7 @@ package com.comiee.mei.demo;
 
 import com.comiee.mei.communal.exception.LoadException;
 import com.comiee.mei.communication.Client;
+import com.google.gson.JsonElement;
 
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         do {
             s = scan.nextLine();
-            Object ret = client.send(new DebugMsg().build(s));
+            JsonElement ret = client.send(new DebugMsg().build(s));
             System.out.println(ret);
         } while (!s.isEmpty());
         client.close();

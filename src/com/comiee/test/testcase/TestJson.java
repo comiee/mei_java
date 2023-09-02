@@ -1,24 +1,26 @@
 package com.comiee.test.testcase;
 
-import com.comiee.mei.communal.Json;
+import com.comiee.mei.communal.JsonTool;
 import com.comiee.test.comm.TestCase;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
 public class TestJson extends TestCase {
-    private final Json json = Json.of(
+    private final JsonObject jsonObject = JsonTool.createJsonObject(
             "cmd", "test",
-            "value", Json.of(
+            "value", JsonTool.createJsonObject(
                     "array", new int[]{1, 2, 3},
                     "list", List.of(
-                            Json.of(
+                            JsonTool.createJsonObject(
                                     "list", List.of(4, 5, 6),
                                     "int", 7,
                                     "float", 8.9
                             ),
-                            Json.of(
+                            JsonTool.createJsonObject(
                                     "boolean", true,
-                                    "null", null,
+                                    "null", JsonNull.INSTANCE,
                                     "string", "{,}"
                             )
                     )
@@ -38,11 +40,11 @@ public class TestJson extends TestCase {
                     "]}}";
 
     private void testJsonDump() {
-        assertEqual(string, json.dump());
+        assertEqual(string, JsonTool.dump(jsonObject));
     }
 
     private void testJsonParse() {
-        assertEqual(json, Json.parse(string));
+        assertEqual(jsonObject, JsonTool.parse(string));
     }
 
     public static void main(String[] args) {

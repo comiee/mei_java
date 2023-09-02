@@ -1,6 +1,7 @@
 package com.comiee.mei.communication;
 
 import com.comiee.mei.communal.exception.MessageException;
+import com.google.gson.JsonElement;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -33,7 +34,7 @@ public class Client {
         return socket;
     }
 
-    public Object send(String message) {
+    public JsonElement send(String message) {
         try {
             if (sender == null) {
                 sender = register("sender");

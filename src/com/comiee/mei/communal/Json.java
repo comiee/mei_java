@@ -7,6 +7,7 @@ import com.google.gson.ToNumberPolicy;
 import java.lang.reflect.Array;
 import java.util.*;
 
+// 基于Gson自己实现Json
 public class Json extends LinkedHashMap<String, Object> {
     private static final Gson gson = new GsonBuilder()
             .serializeNulls()

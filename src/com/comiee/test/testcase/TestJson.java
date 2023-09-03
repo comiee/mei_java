@@ -2,7 +2,6 @@ package com.comiee.test.testcase;
 
 import com.comiee.mei.communal.JsonTool;
 import com.comiee.test.comm.TestCase;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class TestJson extends TestCase {
                             ),
                             JsonTool.createJsonObject(
                                     "boolean", true,
-                                    "null", JsonNull.INSTANCE,
+                                    "null", null,
                                     "string", "{,}"
                             )
                     )

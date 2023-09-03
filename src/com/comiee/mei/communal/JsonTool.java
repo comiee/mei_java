@@ -57,8 +57,12 @@ public class JsonTool {
     }
 
     public static <T> T getFromObject(JsonObject jsonObject, String key, Class<T> cls) {
+        return getFromObject(jsonObject, key, cls, null);
+    }
+
+    public static <T> T getFromObject(JsonObject jsonObject, String key, Class<T> cls, T defaultValue) {
         if (!jsonObject.has(key)) {
-            return null;
+            return defaultValue;
         }
         JsonElement jsonElement = jsonObject.get(key);
         if (JsonElement.class.isAssignableFrom(cls)) {
@@ -67,15 +71,19 @@ public class JsonTool {
             }
         } else {
             if (!jsonElement.isJsonPrimitive()) {
-                return null;
+                return defaultValue;
             }
             JsonPrimitive jsonPrimitive = jsonElement.getAsJsonPrimitive();
             return getFromPrimitive(jsonPrimitive, cls);
         }
-        return null;
+        return defaultValue;
     }
 
     public static <T> T getFromPrimitive(JsonPrimitive jsonPrimitive, Class<T> cls) {
+        return getFromPrimitive(jsonPrimitive, cls, null);
+    }
+
+    public static <T> T getFromPrimitive(JsonPrimitive jsonPrimitive, Class<T> cls, T defaultValue) {
         if (String.class.isAssignableFrom(cls) && jsonPrimitive.isString()) {
             return cls.cast(jsonPrimitive.getAsString());
         } else if (Boolean.class.isAssignableFrom(cls) && jsonPrimitive.isBoolean()) {
@@ -83,7 +91,7 @@ public class JsonTool {
         } else if (Number.class.isAssignableFrom(cls) && jsonPrimitive.isNumber()) {
             return cls.cast(jsonPrimitive.getAsNumber());
         }
-        return null;
+        return defaultValue;
     }
 
     public static JsonObject createJsonObject(Object... args) {

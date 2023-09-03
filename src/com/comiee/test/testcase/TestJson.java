@@ -7,17 +7,17 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 public class TestJson extends TestCase {
-    private final JsonObject jsonObject = JsonTool.createJsonObject(
+    private final JsonObject jsonObject = JsonTool.createObject(
             "cmd", "test",
-            "value", JsonTool.createJsonObject(
+            "value", JsonTool.createObject(
                     "array", new int[]{1, 2, 3},
                     "list", List.of(
-                            JsonTool.createJsonObject(
-                                    "list", List.of(4, 5, 6),
+                            JsonTool.createObject(
+                                    "jsonArray", JsonTool.createArray(4, 5, 6),
                                     "int", 7,
                                     "float", 8.9
                             ),
-                            JsonTool.createJsonObject(
+                            JsonTool.createObject(
                                     "boolean", true,
                                     "null", null,
                                     "string", "{,}"
@@ -29,7 +29,7 @@ public class TestJson extends TestCase {
             "{\"cmd\":\"test\",\"value\":{" +
                     "\"array\":[1,2,3]," +
                     "\"list\":[{" +
-                    "\"list\":[4,5,6]," +
+                    "\"jsonArray\":[4,5,6]," +
                     "\"int\":7," +
                     "\"float\":8.9" +
                     "},{" +

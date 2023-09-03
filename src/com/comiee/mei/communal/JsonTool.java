@@ -94,7 +94,7 @@ public class JsonTool {
         return defaultValue;
     }
 
-    public static JsonObject createJsonObject(Object... args) {
+    public static JsonObject createObject(Object... args) {
         JsonObject jsonObject = new JsonObject();
         for (int i = 0; i < args.length; i += 2) {
             String k = args[i].toString();
@@ -102,5 +102,13 @@ public class JsonTool {
             jsonObject.add(k, toJsonElement(v));
         }
         return jsonObject;
+    }
+
+    public static JsonArray createArray(Object... args) {
+        JsonArray jsonArray = new JsonArray();
+        for (Object x : args) {
+            jsonArray.add(toJsonElement(x));
+        }
+        return jsonArray;
     }
 }

@@ -30,7 +30,7 @@ public class Message {
      * @return json格式的字符串
      */
     protected String buildMsg(Object value) {
-        return JsonTool.createJsonObject(
+        return JsonTool.createObject(
                 "cmd", cmd,
                 "value", value
         ).toString();
@@ -73,7 +73,7 @@ class RegisterMsg extends Message {
     }
 
     String build(String name, String type) {
-        return super.buildMsg(JsonTool.createJsonObject(
+        return super.buildMsg(JsonTool.createObject(
                 "name", name,
                 "client_type", type
         ));

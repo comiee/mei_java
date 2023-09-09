@@ -7,7 +7,7 @@ import com.comiee.mei.initialization.Load;
 
 class DemoClient extends Client {
     DemoClient() throws LoadException {
-        super("demo");
+        super("demo_java");
         Load.initMessage();
     }
 }

@@ -43,11 +43,9 @@ public class Client {
             logger.fine("客户端[" + name + "]发送消息到服务器：" + message);
             String result = recvMsg(sender);
             logger.fine("客户端[" + name + "]收到服务器回响应：" + result);
-            try {
-                return ResultMsg.parseResult(result);
-            } catch (MessageException e) {
-                logger.severe("客户端[" + name + "]解析服务器响应消息失败：" + e);
-            }
+            return ResultMsg.parseResult(result);
+        } catch (MessageException e) {
+            logger.severe("客户端[" + name + "]解析服务器响应消息失败：" + e);
             return null;
         } catch (IOException e) {
             logger.warning("客户端[" + name + "]连接服务器失败：" + e + "，将在" + RECONNECT_TIME + "秒后重试");
@@ -74,7 +72,7 @@ public class Client {
                 sendMsg(receiver, result);
             }
         } catch (IOException e) {
-            logger.severe("客户端[" + name + "监听客户端时出现异常：" + e + "，将在" + RECONNECT_TIME + "秒后重试");
+            logger.severe("客户端[" + name + "监听服务器时出现异常：" + e + "，将在" + RECONNECT_TIME + "秒后重试");
             sleep(RECONNECT_TIME);
             listenServer();
         }

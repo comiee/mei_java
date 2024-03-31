@@ -5,7 +5,7 @@ import java.net.Socket;
 
 
 class Comm {
-    static final String HOST = "127.0.0.1";
+    static final String HOST = "192.168.1.108";
     static final int PORT = 9999;
     private static final String ENCODING = "UTF-8";
 
@@ -14,13 +14,17 @@ class Comm {
     static void sendMsg(Socket socket, String string) throws IOException {
         var output = socket.getOutputStream();
         var message = string.getBytes(ENCODING);
-        output.write(String.format("%05d", message.length).getBytes(ENCODING));
+        var length = String.format("%d", message.length).getBytes(ENCODING);
+        var n = String.format("%05d", length.length).getBytes(ENCODING);
+        output.write(n);
+        output.write(length);
         output.write(message);
     }
 
     static String recvMsg(Socket socket) throws IOException {
         var input = socket.getInputStream();
-        int length = Integer.parseInt(new String(input.readNBytes(5), ENCODING));
+        int n = Integer.parseInt(new String(input.readNBytes(5), ENCODING));
+        int length = Integer.parseInt(new String(input.readNBytes(n), ENCODING));
         return new String(input.readNBytes(length), ENCODING);
     }
 

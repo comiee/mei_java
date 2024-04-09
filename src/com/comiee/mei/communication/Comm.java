@@ -7,6 +7,7 @@ import java.net.Socket;
 class Comm {
     static final String HOST = "192.168.1.108";
     static final int PORT = 9999;
+    static final int ASYNC_PORT = 9998;
     private static final String ENCODING = "UTF-8";
 
     public static final int RECONNECT_TIME = 3; // 连接失败后的重连等待时间

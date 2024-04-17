@@ -12,7 +12,7 @@ public class JsonTool {
             .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
             .create();
 
-    static JsonElement toJsonElement(Object object) {
+    public static JsonElement toJsonElement(Object object) {
         if (object == null) {
             return JsonNull.INSTANCE;
         } else if (object instanceof JsonElement elem) {

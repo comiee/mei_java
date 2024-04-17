@@ -8,13 +8,12 @@ class Comm {
     static final String HOST = "192.168.1.108";
     static final int PORT = 9999;
     static final int ASYNC_PORT = 9998;
-    private static final String ENCODING = "UTF-8";
+    static final String ENCODING = "UTF-8";
 
     public static final int RECONNECT_TIME = 3; // 连接失败后的重连等待时间
 
-    static void sendMsg(Socket socket, String string) throws IOException {
+    static void sendBytes(Socket socket, byte[] message) throws IOException {
         var output = socket.getOutputStream();
-        var message = string.getBytes(ENCODING);
         var length = String.format("%d", message.length).getBytes(ENCODING);
         var n = String.format("%05d", length.length).getBytes(ENCODING);
         output.write(n);
@@ -22,11 +21,19 @@ class Comm {
         output.write(message);
     }
 
-    static String recvMsg(Socket socket) throws IOException {
+    static void sendMsg(Socket socket, String string) throws IOException {
+        sendBytes(socket, string.getBytes(ENCODING));
+    }
+
+    static byte[] recvBytes(Socket socket) throws IOException {
         var input = socket.getInputStream();
         int n = Integer.parseInt(new String(input.readNBytes(5), ENCODING));
         int length = Integer.parseInt(new String(input.readNBytes(n), ENCODING));
-        return new String(input.readNBytes(length), ENCODING);
+        return input.readNBytes(length);
+    }
+
+    static String recvMsg(Socket socket) throws IOException {
+        return new String(recvBytes(socket), ENCODING);
     }
 
     static void sleep(long seconds) {

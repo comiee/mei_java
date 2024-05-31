@@ -5,8 +5,8 @@ import com.comiee.mei.communication.Client;
 import com.comiee.mei.initialization.Load;
 
 
-class DemoClient extends Client {
-    DemoClient() throws LoadException {
+public class DemoClient extends Client {
+    public DemoClient() throws LoadException {
         super("demo_java");
         Load.initMessage();
     }

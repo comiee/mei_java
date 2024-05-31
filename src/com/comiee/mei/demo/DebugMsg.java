@@ -4,11 +4,11 @@ import com.comiee.mei.communication.Message;
 import com.google.gson.JsonElement;
 
 public class DebugMsg extends Message {
-    DebugMsg() {
+    public DebugMsg() {
         super("debug");
     }
 
-    String build(String value) {
+    public String build(String value) {
         return super.buildMsg(value);
     }
 

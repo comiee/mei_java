@@ -5,14 +5,14 @@ import java.net.Socket;
 
 
 class Comm {
-    static final String HOST = "172.17.176.1";
+    static final String HOST = "192.168.1.105";
     static final int PORT = 9999;
     static final int ASYNC_PORT = 9998;
     static final String ENCODING = "UTF-8";
 
     public static final int RECONNECT_TIME = 3; // 连接失败后的重连等待时间
 
-    static synchronized void sendBytes(Socket socket, byte[] message) throws IOException {
+    static void sendBytes(Socket socket, byte[] message) throws IOException {
         var output = socket.getOutputStream();
         var length = String.format("%d", message.length).getBytes(ENCODING);
         var n = String.format("%05d", length.length).getBytes(ENCODING);
@@ -25,7 +25,7 @@ class Comm {
         sendBytes(socket, string.getBytes(ENCODING));
     }
 
-    static synchronized byte[] recvBytes(Socket socket) throws IOException {
+    static byte[] recvBytes(Socket socket) throws IOException {
         var input = socket.getInputStream();
         int n = Integer.parseInt(new String(input.readNBytes(5), ENCODING));
         int length = Integer.parseInt(new String(input.readNBytes(n), ENCODING));

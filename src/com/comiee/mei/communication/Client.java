@@ -25,7 +25,7 @@ public class Client {
      *
      * @param clientType 可选项有：sender、receiver
      */
-    private Socket register(String clientType) throws IOException {
+    private synchronized Socket register(String clientType) throws IOException {
         logger.info("客户端" + name + "正在向服务器注册" + clientType);
         // 创建Socket对象，指定服务端的IP地址和端口号
         Socket socket = new Socket(HOST, PORT);
@@ -34,7 +34,7 @@ public class Client {
         return socket;
     }
 
-    public JsonElement send(String message) {
+    public synchronized JsonElement send(String message) {
         try {
             if (sender == null) {
                 sender = register("sender");

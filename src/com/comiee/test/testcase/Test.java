@@ -5,6 +5,7 @@ import com.comiee.mei.communication.Client;
 import com.comiee.mei.demo.DebugMsg;
 import com.comiee.mei.demo.DemoClient;
 import com.comiee.test.comm.TestCase;
+import com.google.gson.JsonElement;
 
 public class Test extends TestCase {
     private void testMultiMsg() throws Exception {
@@ -14,7 +15,8 @@ public class Test extends TestCase {
         for (int i = 0; i < ts.length; i++) {
             int fi = i;
             ts[i] = new Thread(() -> {
-                client.send(new DebugMsg().build("" + fi));
+                JsonElement ret = client.send(new DebugMsg().build("" + fi));
+                System.out.println(ret);
             });
         }
         for (Thread t : ts) {

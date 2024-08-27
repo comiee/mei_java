@@ -14,6 +14,7 @@ public class Load {
     private static final Logger logger = Logger.getLogger("load");
 
     public static void initMessage() throws LoadException {
+        logger.info("正在加载消息");
         initMessage("com");
     }
 
